@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../../gql/user";
-import { decodeToken, setToken } from "../../../utils/token";
+import { setToken, decodeToken } from "../../../utils/token";
 import useAuth from "../../../hooks/useAuth";
 import "./LoginForm.scss";
 
@@ -17,7 +17,7 @@ export default function LoginForm() {
     initialValues: initialValues(),
     validationSchema: Yup.object({
       email: Yup.string()
-        .email("El email no es válido")
+        .email("El email no es valido")
         .required("El email es obligatorio"),
       password: Yup.string().required("La contraseña es obligatoria"),
     }),
@@ -37,12 +37,13 @@ export default function LoginForm() {
       }
     },
   });
+
   return (
     <Form className="login-form" onSubmit={formik.handleSubmit}>
-      <h2>Entra para ver fotos y vídeos de tus amigos</h2>
+      <h2>Entra para ver fotos y vídeos de tus amigos.</h2>
       <Form.Input
         type="text"
-        placeholder="Correo electrónico"
+        placeholder="Correo electronico"
         name="email"
         value={formik.values.email}
         onChange={formik.handleChange}
