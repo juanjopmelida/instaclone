@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Button } from "semantic-ui-react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 import { useMutation } from "@apollo/client";
 import { GET_USER, UPDATE_AVATAR } from "../../../gql/user";
 import "./AvatarForm.scss";
@@ -8,6 +9,7 @@ import AuthContext from "../../../context/AuthContext";
 
 export default function AvatarForm(props) {
   const { setShowModal, auth } = props;
+  const [loading, setLoading] = useState(false);
 
   const [updateAvatar] = useMutation(UPDATE_AVATAR, {
     update(cache, { data: { updateAvatar } }) {
@@ -30,12 +32,15 @@ export default function AvatarForm(props) {
     const file = acceptedFile[0];
 
     try {
+      setLoading(true);
       const result = await updateAvatar({ variables: { file } });
       const { data } = result;
 
       if (!data.updateAvatar.status) {
-        console.log("qq");
+        toast.warning("Error al actualizar el avatar");
+        setLoading(false);
       } else {
+        setLoading(false);
         setShowModal(false);
       }
     } catch (error) {
@@ -52,7 +57,9 @@ export default function AvatarForm(props) {
 
   return (
     <div className="avatar-form">
-      <Button {...getRootProps()}>Cargar una foto</Button>
+      <Button {...getRootProps()} loading={loading}>
+        Cargar una foto
+      </Button>
       <Button>Eliminar foto actual</Button>
       <Button onClick={() => setShowModal(false)}>Cancelar</Button>
       <input {...getInputProps()} />
